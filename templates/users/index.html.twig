@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Users page{% endblock %}
+
+{% block body %}
+    <h1>Users page</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Enabled</th>
+                <th>Admin</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.enabled ? 'Yes' : 'No' }}</td>
+                <td>{{ user.admin ? 'Yes' : 'No' }}</td>
+                <td>
+                    <button class='col-3 btn btn-success' type='button'>
+                        <a href="{{ path('users_show', {'id': user.id}) }}" style="color: white">show</a>
+                    </button>
+                    <button class='col-3 btn btn-warning' type='button'>
+                        <a href="{{ path('users_edit', {'id': user.id}) }}" style="color: white">edit</a>
+                    </button>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <button class='col-3 btn btn-primary' type='button'>
+        <a href="{{ path('users_new') }}" style="color: white">Create new user</a>
+    </button>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Results{% endblock %}
+
+{% block body %}
+
+    <button class='mb-3 btn btn-default' type='button'>
+        <a href="{{ path('results_index') }}" style="color: white">Back to list</a>
+    </button>
+
+    <h1>Edit Results</h1>
+
+    {{ include('results/_form.html.twig', {'button_label': 'Update'}) }}
+
+    {{ include('results/_delete_form.html.twig') }}
+{% endblock %}

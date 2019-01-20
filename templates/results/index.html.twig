@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Results page{% endblock %}
+
+{% block body %}
+    <h1>Results page</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Result</th>
+                <th>Time</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for result in results %}
+            <tr>
+                <td>{{ result.id }}</td>
+                <td>{{ result.result }}</td>
+                <td>{{ result.time ? result.time|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    <button class='col-3 btn btn-success' type='button'>
+                        <a href="{{ path('results_show', {'id': result.id}) }}" style="color: white">show</a>
+                    </button>
+                    <button class='col-3 btn btn-warning' type='button'>
+                        <a href="{{ path('results_edit', {'id': result.id}) }}" style="color: white">edit</a>
+                    </button>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <button class='col-3 btn btn-primary' type='button'>
+        <a href="{{ path('results_new') }}" style="color: white">Create new result</a>
+    </button>
+{% endblock %}

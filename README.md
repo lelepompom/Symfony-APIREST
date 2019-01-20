@@ -1,4 +1,4 @@
-# Desarrollo de una API REST | SYMFONY.
+# Desarrollo de una API REST | SYMFONY
 #### Asignatura: *Backend con Tecnologías de Libre Distribución - PHP*
 #### [Máster en Ingeniería Web por la U.P.M.](http://miw.etsisi.upm.es)
 
