@@ -3,7 +3,7 @@
 #### [Máster en Ingeniería Web por la U.P.M.](http://miw.etsisi.upm.es)
 
 ### Descripción
-Se proporciona una especificación y un esqueleto de desarrollo basado en Symfony y se desarrollará una API completa
+Se proporciona una [especificación](http://localhost:8000/api-docs/index.html) y un esqueleto de desarrollo basado en Symfony y se desarrollará una API completa
 empleando como base el modelo de datos utilizado en la práctica anterior. Las operaciones que deberá proporcionar la
 interfaz de programación para gestionar usuarios son:
 ####  Users
