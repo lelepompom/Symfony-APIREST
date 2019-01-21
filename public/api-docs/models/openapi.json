@@ -385,7 +385,7 @@
         "description": "Creates a new result",
         "operationId": "post_results",
         "responses": {
-          "201": {
+          "200": {
             "description": "`Created` Result created",
             "content": {
               "application/json": {
@@ -406,6 +406,26 @@
             }
           },
           "400": {
+            "description": "`Bad Request` Type not supported.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Message"
+                }
+              }
+            }
+          },
+          "404": {
             "$ref": "#/components/responses/404_Resource_Not_Found_Response"
           }
         },
@@ -830,7 +850,7 @@
       },
       "ResultData": {
         "properties": {
-          "user_id": {
+          "userId": {
             "description": "User Id",
             "type": "integer"
           },
@@ -840,7 +860,7 @@
           }
         },
         "example": {
-          "user_id": "User_id",
+          "userId": 1,
           "result": 10
         }
       },
