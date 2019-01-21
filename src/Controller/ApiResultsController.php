@@ -108,13 +108,22 @@ class ApiResultsController extends AbstractController
     /**
      * Returns a result based on a single ID
      *
+     * @param int $resultId
      * @return JsonResponse
      * @Route("/{resultId}", name="get_result", methods={ "GET" })
      */
-    public function getResult(): JsonResponse
+    public function getResultById(int $resultId): JsonResponse
     {
+        $result = $this->getDoctrine()
+            ->getRepository(Results::class)
+            ->find($resultId);
 
-
+        return $result
+            ? new JsonResponse(['result ' => $result])
+            : new JsonResponse(
+                new Message(Response::HTTP_NOT_FOUND, Response::$statusTexts[404]),
+                Response::HTTP_NOT_FOUND
+            );
     }
 
     /**
