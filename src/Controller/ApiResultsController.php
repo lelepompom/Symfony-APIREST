@@ -7,8 +7,13 @@
  */
 
 namespace App\Controller;
+
+use App\Entity\Results;
+use App\Entity\Message;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 /**
  * Class ApiResultsController
@@ -18,7 +23,7 @@ use Symfony\Component\Routing\Annotation\Route;
  * @Route("/api/v1/results");
  */
 
-class ApiResultsController
+class ApiResultsController extends AbstractController
 {
 
     /**
@@ -29,6 +34,16 @@ class ApiResultsController
      */
     public function cgetResults(): JsonResponse
     {
+        $results = $this->getDoctrine()
+            ->getRepository(Results::class)
+            ->findAll();
+
+        return $results
+            ? new JsonResponse(['results ' => $results])
+            : new JsonResponse(
+                new Message(Response::HTTP_NOT_FOUND, Response::$statusTexts[404]),
+                Response::HTTP_NOT_FOUND
+            );
 
 
     }

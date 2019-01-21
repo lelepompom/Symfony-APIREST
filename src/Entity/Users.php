@@ -110,7 +110,7 @@ class Users implements \JsonSerializable
     private $password;
 
     /**
-     * User constructor.
+     * Users constructor.
      *
      * @param string $username username
      * @param string $email    email
@@ -231,7 +231,7 @@ class Users implements \JsonSerializable
     }
 
     /**
-     * Representation of User as string
+     * Representation of Users as string
      *
      * @return string
      */
