@@ -7,58 +7,110 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Users
  *
- * @ORM\Table(name="users", uniqueConstraints={@ORM\UniqueConstraint(name="IDX_UNIQ_EMAIL", columns={"email"}), @ORM\UniqueConstraint(name="IDX_UNIQ_USER", columns={"username"})})
+ * @ORM\Table(
+ *     name                 = "users",
+ *     uniqueConstraints    = {
+ *          @ORM\UniqueConstraint(
+ *              name="IDX_UNIQ_USER", columns={ "username" }
+ *          ),
+ *          @ORM\UniqueConstraint(
+ *              name="IDX_UNIQ_EMAIL", columns={ "email" }
+ *          )
+ *      }
+ *     )
  * @ORM\Entity
  */
 class Users implements \JsonSerializable
 {
     /**
-     * @var int
+     * Id
      *
-     * @ORM\Column(name="id", type="integer", nullable=false)
+     * @var integer
+     *
+     * @ORM\Column(
+     *     name     = "id",
+     *     type     = "integer",
+     *     nullable = false
+     *     )
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @SuppressWarnings(PHPMD.ShortVariable)
      */
     private $id;
 
     /**
+     * Username
+     *
      * @var string
      *
-     * @ORM\Column(name="username", type="string", length=40, nullable=false)
+     * @ORM\Column(
+     *     name     = "username",
+     *     type     = "string",
+     *     length   = 40,
+     *     nullable = false,
+     *     unique   = true
+     *     )
      */
     private $username;
 
     /**
+     * Email
+     *
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=60, nullable=false)
+     * @ORM\Column(
+     *     name     = "email",
+     *     type     = "string",
+     *     length   = 60,
+     *     nullable = false,
+     *     unique   = true
+     *     )
      */
     private $email;
 
     /**
-     * @var bool
+     * Enabled
      *
-     * @ORM\Column(name="enabled", type="boolean", nullable=false)
+     * @var boolean
+     *
+     * @ORM\Column(
+     *     name     = "enabled",
+     *     type     = "boolean",
+     *     nullable = false
+     *     )
      */
     private $enabled;
 
     /**
-     * @var bool|null
+     * IsAdmin
      *
-     * @ORM\Column(name="admin", type="boolean", nullable=true)
+     * @var boolean
+     *
+     * @ORM\Column(
+     *     name     = "admin",
+     *     type     = "boolean",
+     *     nullable = true,
+     *     options  = { "default" = false }
+     *     )
      */
-    private $admin = '0';
+    private $isAdmin;
 
     /**
+     * Password
+     *
      * @var string
      *
-     * @ORM\Column(name="password", type="string", length=60, nullable=false)
+     * @ORM\Column(
+     *     name     = "password",
+     *     type     = "string",
+     *     length   = 60,
+     *     nullable = false
+     *     )
      */
     private $password;
 
-
     /**
-     * Users constructor.
+     * User constructor.
      *
      * @param string $username username
      * @param string $email    email
@@ -79,6 +131,31 @@ class Users implements \JsonSerializable
         $this->setPassword($password);
         $this->enabled  = $enabled;
         $this->isAdmin  = $isAdmin;
+    }
+
+    /**
+     * Set password
+     *
+     * @param string $password password
+     *
+     * @return Users
+     */
+    public function setPassword(string $password): Users
+    {
+        $this->password = password_hash($password, PASSWORD_DEFAULT);
+        return $this;
+    }
+
+    /**
+     * Verifies that the given hash matches the user password.
+     *
+     * @param string $password password
+     *
+     * @return boolean
+     */
+    public function validatePassword($password): bool
+    {
+        return password_verify($password, $this->password);
     }
 
     /**
@@ -114,14 +191,6 @@ class Users implements \JsonSerializable
     }
 
     /**
-     * @param string $email
-     */
-    public function setEmail(string $email): void
-    {
-        $this->email = $email;
-    }
-
-    /**
      * @return bool
      */
     public function isEnabled(): bool
@@ -138,35 +207,27 @@ class Users implements \JsonSerializable
     }
 
     /**
-     * @return bool|null
+     * @return bool
      */
-    public function getAdmin(): ?bool
+    public function isAdmin(): bool
     {
-        return $this->admin;
+        return $this->isAdmin;
     }
 
     /**
-     * @param bool|null $admin
+     * @param bool $isAdmin
      */
-    public function setAdmin(?bool $admin): void
+    public function setIsAdmin(bool $isAdmin): void
     {
-        $this->admin = $admin;
+        $this->isAdmin = $isAdmin;
     }
 
     /**
-     * @return string
+     * @param string $email
      */
-    public function getPassword(): string
+    public function setEmail(string $email): void
     {
-        return $this->password;
-    }
-
-    /**
-     * @param string $password
-     */
-    public function setPassword(string $password): void
-    {
-        $this->password = $password;
+        $this->email = $email;
     }
 
     /**

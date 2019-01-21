@@ -7,11 +7,92 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * Results
  *
- * @ORM\Table(name="results", indexes={@ORM\Index(name="FK_USER_ID_idx", columns={"user_id"})})
  * @ORM\Entity
+ * @ORM\Table(
+ *     name    = "results",
+ *     indexes = {
+ *          @ORM\Index(name="FK_USER_ID_idx", columns={ "user_id" })
+ *     }
+ * )
  */
 class Results implements \JsonSerializable
 {
+    /**
+     * Result id
+     *
+     * @var integer
+     *
+     * @ORM\Column(
+     *     name     = "id",
+     *     type     = "integer",
+     *     nullable = false
+     * )
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @SuppressWarnings(PHPMD.ShortVariable)
+     */
+    private $id;
+
+    /**
+     * Result value
+     *
+     * @var integer
+     *
+     * @ORM\Column(
+     *     name     = "result",
+     *     type     = "integer",
+     *     nullable = false
+     *     )
+     */
+    private $result;
+
+    /**
+     * Result user
+     *
+     * @var Users
+     *
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumns({
+     *     @ORM\JoinColumn(
+     *          name                 = "user_id",
+     *          referencedColumnName = "id",
+     *          onDelete             = "cascade"
+     *     )
+     * })
+     */
+    private $user;
+
+    /**
+     * Result time
+     *
+     * @var \DateTime
+     *
+     * @ORM\Column(
+     *     name     = "time",
+     *     type     = "datetime",
+     *     nullable = false
+     *     )
+     */
+    private $time;
+
+    /**
+     * Result constructor.
+     *
+     * @param int       $result result
+     * @param Users      $user   user
+     * @param \DateTime $time   time
+     */
+    public function __construct(
+        int $result = 0,
+        Users $user = null,
+        \DateTime $time = null
+    ) {
+        $this->id     = 0;
+        $this->result = $result;
+        $this->user   = $user;
+        $this->time   = $time;
+    }
+
     /**
      * @return int
      */
@@ -28,13 +109,28 @@ class Results implements \JsonSerializable
         return $this->result;
     }
 
-
     /**
      * @param int $result
      */
     public function setResult(int $result): void
     {
         $this->result = $result;
+    }
+
+    /**
+     * @return Users
+     */
+    public function getUser(): Users
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param Users $user
+     */
+    public function setUser(Users $user): void
+    {
+        $this->user = $user;
     }
 
     /**
@@ -52,55 +148,6 @@ class Results implements \JsonSerializable
     {
         $this->time = $time;
     }
-
-    /**
-     * @return \Users
-     */
-    public function getUser(): \Users
-    {
-        return $this->user;
-    }
-
-    /**
-     * @param \Users $user
-     */
-    public function setUser(\Users $user): void
-    {
-        $this->user = $user;
-    }
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
-
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="result", type="integer", nullable=false)
-     */
-    private $result;
-
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="time", type="datetime", nullable=false)
-     */
-    private $time;
-
-    /**
-     * @var \Users
-     *
-     * @ORM\ManyToOne(targetEntity="Users")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="user_id", referencedColumnName="id")
-     * })
-     */
-    private $user;
-
 
     /**
      * Implements __toString()
