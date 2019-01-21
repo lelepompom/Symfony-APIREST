@@ -116,13 +116,46 @@ class ApiUsersController extends AbstractController
     /**
      * Updates a user
      *
+     * @param int $userId
+     * @param Request $request
      * @return JsonResponse
      * @Route("/{userId}", name="put_user", methods={ "PUT" })
      */
-    public function putUser(): JsonResponse
+    public function putUser(int $userId, Request $request): JsonResponse
     {
+        $user = $this->getDoctrine()
+            ->getRepository(Users::class)
+            ->find($userId);
 
+        if(!$user){
+            return new JsonResponse(
+                new Message(Response::HTTP_NOT_FOUND, Response::$statusTexts[404]),
+                Response::HTTP_NOT_FOUND
+            );
+        }
 
+        $body = $request->getContent();
+        $data = json_decode($body, true);
+
+        if(!$data['username'] || !$data['email'] || !$data['password']){
+            return new JsonResponse(
+                new Message(Response::HTTP_BAD_REQUEST, Response::$statusTexts[400]),
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        $user->setUsername($data['username']);
+        $user->setEmail($data['email']);
+        $user->setPassword($data['password']);
+        $user->setEnabled($data['enabled']);
+        $user->setIsAdmin($data['isAdmin']);
+
+        $this->getDoctrine()->getManager()->flush();
+
+        return new JsonResponse(
+            new Message(Response::HTTP_ACCEPTED, Response::$statusTexts[202]),
+            Response::HTTP_ACCEPTED
+        );
     }
 
     /**
@@ -153,7 +186,6 @@ class ApiUsersController extends AbstractController
             new Message(Response::HTTP_NO_CONTENT, Response::$statusTexts[204]),
             Response::HTTP_NO_CONTENT
         );
-
     }
 
     /**
