@@ -128,12 +128,31 @@ class ApiUsersController extends AbstractController
     /**
      * Deletes a user
      *
+     * @param int $userId
      * @return JsonResponse
      * @Route("/{userId}", name="delete_user", methods={ "DELETE" })
      */
-    public function deleteUser(): JsonResponse
+    public function deleteUser(int $userId): JsonResponse
     {
+        $user = $this->getDoctrine()
+            ->getRepository(Users::class)
+            ->find($userId);
 
+        if(!$user){
+            return new JsonResponse(
+                new Message(Response::HTTP_NOT_FOUND, Response::$statusTexts[404]),
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($user);
+        $em->flush();
+
+        return new JsonResponse(
+            new Message(Response::HTTP_NO_CONTENT, Response::$statusTexts[204]),
+            Response::HTTP_NO_CONTENT
+        );
 
     }
 
