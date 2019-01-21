@@ -12,6 +12,7 @@ namespace App\Controller;
 use App\Entity\Users;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Message;
 use Symfony\Component\HttpFoundation\Response;
@@ -49,12 +50,32 @@ class ApiUsersController extends AbstractController
     /**
      * Creates a new user
      *
+     * @param Request $request
      * @return JsonResponse
      * @Route("", name="post_users", methods={ "POST" })
      */
-    public function postUsers(): JsonResponse
+    public function postUsers(Request $request): JsonResponse
     {
+        $body = $request->getContent();
+        $data = json_decode($body, true);
 
+        if(!$data['username'] || !$data['email'] || !$data['password']){
+            return new JsonResponse(
+                new Message(Response::HTTP_BAD_REQUEST, Response::$statusTexts[400]),
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        $newUser = new Users($data['username'], $data['email'], $data['password'], $data['enabled'], $data['isAdmin']);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($newUser);
+        $em->flush();
+
+        return new JsonResponse(
+            new Message(Response::HTTP_CREATED, Response::$statusTexts[201]),
+            Response::HTTP_CREATED
+        );
 
     }
 
