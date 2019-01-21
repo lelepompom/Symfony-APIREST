@@ -10,6 +10,8 @@ namespace App\Controller;
 
 use App\Entity\Results;
 use App\Entity\Message;
+use App\Entity\Users;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,13 +53,44 @@ class ApiResultsController extends AbstractController
     /**
      * Creates a new result
      *
+     * @param Request $request
      * @return JsonResponse
+     * @throws \Exception
      * @Route("", name="post_results", methods={ "POST" })
      */
-    public function postResults(): JsonResponse
+    public function postResults(Request $request): JsonResponse
     {
+        $body = $request->getContent();
+        $data = json_decode($body, true);
 
+        if(!$data['userId'] || !$data['result']){
+            return new JsonResponse(
+                new Message(Response::HTTP_BAD_REQUEST, Response::$statusTexts[400]),
+                Response::HTTP_BAD_REQUEST
+            );
+        }
 
+        $user = $this->getDoctrine()
+            ->getRepository(Users::class)
+            ->find($data['userId']);
+
+        if (!$user) {
+            return new JsonResponse(
+                new Message(Response::HTTP_NOT_FOUND, Response::$statusTexts[404]),
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $timestamp = new \DateTime('now');
+
+        /** @var Users $user */
+        $newResult = new Results($data['result'], $user, $timestamp);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($newResult);
+        $em->flush();
+
+        return new JsonResponse(['results ' => $newResult]);
     }
 
     /**

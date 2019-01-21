@@ -404,6 +404,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
           }
         },
         "security": [
@@ -631,6 +634,7 @@
     {
       "name": "Users",
       "description": "User management"
+
     },
     {
       "name": "Results",
@@ -783,7 +787,7 @@
       "Result": {
         "required": [
           "id",
-          "user_id",
+          "user",
           "result"
         ],
         "properties": {
@@ -792,10 +796,12 @@
             "type": "integer",
             "format": "int32"
           },
-          "user_id": {
-            "description": "User Id",
-            "type": "integer",
-            "format": "int32"
+          "user": {
+            "description": "User",
+            "type": "object",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
           },
           "result": {
             "description": "Result",
@@ -810,7 +816,13 @@
         "example": {
           "result": {
             "id": 15,
-            "user_id": 4,
+            "user": {
+              "id": 1508,
+              "username": "User name",
+              "email": "User email",
+              "enabled": true,
+              "admin": false
+            },
             "result": 8,
             "time": "2018-12-10 21:49:25"
           }
@@ -820,21 +832,16 @@
         "properties": {
           "user_id": {
             "description": "User Id",
-            "type": "string"
+            "type": "integer"
           },
           "result": {
             "description": "Result",
-            "type": "string"
-          },
-          "time": {
-            "description": "Time when the result was registered",
-            "type": "string"
+            "type": "integer"
           }
         },
         "example": {
           "user_id": "User_id",
-          "result": 10,
-          "time": "Result_time"
+          "result": 10
         }
       },
       "ResultArray": {

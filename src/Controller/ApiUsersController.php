@@ -73,12 +73,22 @@ class ApiUsersController extends AbstractController
     /**
      * Returns a user based on a single ID
      *
+     * @param int $userId
      * @return JsonResponse
      * @Route("/{userId}", name="get_user", methods={ "GET" })
      */
-    public function getUser(): JsonResponse
+    public function getUserById(int $userId): JsonResponse
     {
+        $user = $this->getDoctrine()
+            ->getRepository(Users::class)
+            ->find($userId);
 
+        return $user
+            ? new JsonResponse(['user ' => $user])
+            : new JsonResponse(
+                new Message(Response::HTTP_NOT_FOUND, Response::$statusTexts[404]),
+                Response::HTTP_NOT_FOUND
+            );
 
     }
 
