@@ -90,7 +90,10 @@ class ApiResultsController extends AbstractController
         $em->persist($newResult);
         $em->flush();
 
-        return new JsonResponse(['results ' => $newResult]);
+        return new JsonResponse(
+            new Message(Response::HTTP_CREATED, Response::$statusTexts[201]),
+            Response::HTTP_CREATED
+        );
     }
 
     /**
@@ -141,13 +144,31 @@ class ApiResultsController extends AbstractController
     /**
      * Deletes a result
      *
+     * @param int $resultId
      * @return JsonResponse
      * @Route("/{resultId}", name="delete_result", methods={ "DELETE" })
      */
-    public function deleteResult(): JsonResponse
+    public function deleteResult(int $resultId): JsonResponse
     {
+        $result = $this->getDoctrine()
+            ->getRepository(Results::class)
+            ->find($resultId);
 
+        if(!$result){
+            return new JsonResponse(
+                new Message(Response::HTTP_NOT_FOUND, Response::$statusTexts[404]),
+                Response::HTTP_NOT_FOUND
+            );
+        }
 
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($result);
+        $em->flush();
+
+        return new JsonResponse(
+            new Message(Response::HTTP_NO_CONTENT, Response::$statusTexts[204]),
+            Response::HTTP_NO_CONTENT
+        );
     }
 
     /**

@@ -385,7 +385,7 @@
         "description": "Creates a new result",
         "operationId": "post_results",
         "responses": {
-          "200": {
+          "201": {
             "description": "`Created` Result created",
             "content": {
               "application/json": {
