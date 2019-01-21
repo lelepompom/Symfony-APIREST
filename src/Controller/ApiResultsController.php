@@ -132,13 +132,57 @@ class ApiResultsController extends AbstractController
     /**
      * Updates a result
      *
+     * @param Request $request
+     * @param int $resultId
      * @return JsonResponse
      * @Route("/{resultId}", name="put_result", methods={ "PUT" })
+     * @throws \Exception
      */
-    public function putResult(): JsonResponse
+    public function putResult(int $resultId, Request $request): JsonResponse
     {
+        $result = $this->getDoctrine()
+            ->getRepository(Results::class)
+            ->find($resultId);
 
+        if (!$result) {
+            return new JsonResponse(
+                new Message(Response::HTTP_NOT_FOUND, Response::$statusTexts[404]),
+                Response::HTTP_NOT_FOUND
+            );
+        }
 
+        $body = $request->getContent();
+        $data = json_decode($body, true);
+
+        if(!$data['userId'] || !$data['result']){
+            return new JsonResponse(
+                new Message(Response::HTTP_BAD_REQUEST, Response::$statusTexts[400]),
+                Response::HTTP_BAD_REQUEST
+            );
+        }
+
+        $user = $this->getDoctrine()
+            ->getRepository(Users::class)
+            ->find($data['userId']);
+
+        if (!$user) {
+            return new JsonResponse(
+                new Message(Response::HTTP_NOT_FOUND, Response::$statusTexts[404]),
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $result->setResult($data['result']);
+        /** @var Users $user */
+        $result->setUser($user);
+        $result->setTime(new \DateTime('now'));
+
+        $this->getDoctrine()->getManager()->flush();
+
+        return new JsonResponse(
+            new Message(Response::HTTP_ACCEPTED, Response::$statusTexts[202]),
+            Response::HTTP_ACCEPTED
+        );
     }
 
     /**

@@ -530,7 +530,7 @@
           }
         ],
         "responses": {
-          "209": {
+          "202": {
             "description": "`Content Returned` Result previously existed and is now updated",
             "content": {
               "application/json": {
