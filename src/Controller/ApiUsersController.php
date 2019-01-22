@@ -9,6 +9,7 @@
 namespace App\Controller;
 
 
+use App\Entity\Results;
 use App\Entity\Users;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -179,6 +180,20 @@ class ApiUsersController extends AbstractController
         }
 
         $em = $this->getDoctrine()->getManager();
+
+        $results = $this->getDoctrine()
+            ->getRepository(Results::class)
+            ->findAll();
+
+        foreach ($results as $result) {
+            /** @var Results $result */
+            /** @var Users $candidate */
+            $candidate = $result->getUser();
+            if ( $candidate->getId() == $userId ){
+                $em->remove($result);
+            }
+        }
+
         $em->remove($user);
         $em->flush();
 
