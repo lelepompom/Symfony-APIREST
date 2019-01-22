@@ -88,8 +88,9 @@ class ApiUsersController extends AbstractController
      */
     public function optionsUsers(): JsonResponse
     {
-
-
+        return new JsonResponse(
+            null, Response::HTTP_OK, array("Allow" => "GET, POST, OPTIONS")
+        );
     }
 
     /**
@@ -206,13 +207,18 @@ class ApiUsersController extends AbstractController
     /**
      * Provides the list of HTTP supported methods
      *
+     * @param int $userId
      * @return JsonResponse
      * @Route("/{userId}", name="options_user", methods={ "OPTIONS" })
      */
-    public function optionUser(): JsonResponse
+    public function optionUser(int $userId): JsonResponse
     {
-
-
+        return $userId
+            ? new JsonResponse(null, Response::HTTP_OK, array("Allow" => "GET, PUT, DELETE, OPTIONS"))
+            : new JsonResponse(
+                new Message(Response::HTTP_NOT_FOUND, Response::$statusTexts[404]),
+                Response::HTTP_NOT_FOUND
+            );
     }
 
 

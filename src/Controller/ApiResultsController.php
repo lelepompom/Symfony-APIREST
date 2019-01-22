@@ -104,8 +104,9 @@ class ApiResultsController extends AbstractController
      */
     public function optionsResults(): JsonResponse
     {
-
-
+        return new JsonResponse(
+            null, Response::HTTP_OK, array("Allow" => "GET, POST, OPTIONS")
+        );
     }
 
     /**
@@ -218,12 +219,17 @@ class ApiResultsController extends AbstractController
     /**
      * Provides the list of HTTP supported methods
      *
+     * @param int $resultId
      * @return JsonResponse
      * @Route("/{resultId}", name="options_result", methods={ "OPTIONS" })
      */
-    public function optionResult(): JsonResponse
+    public function optionResult(int $resultId): JsonResponse
     {
-
-
+        return $resultId
+            ? new JsonResponse(null, Response::HTTP_OK, array("Allow" => "GET, PUT, DELETE, OPTIONS"))
+            : new JsonResponse(
+                new Message(Response::HTTP_NOT_FOUND, Response::$statusTexts[404]),
+                Response::HTTP_NOT_FOUND
+            );
     }
 }
