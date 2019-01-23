@@ -271,6 +271,63 @@ class ApiResultsController extends AbstractController
             ],
             Response::HTTP_OK
         );
+    }
 
+    /**
+     * Returns a user results average
+     *
+     * @param int $userId
+     * @return JsonResponse
+     * @Route("/average/{userId}", name="get_user_average", methods={ "GET" })
+     */
+    public function getUserResultAverage(int $userId): JsonResponse
+    {
+        $user = $this->getDoctrine()
+            ->getRepository(Users::class)
+            ->find($userId);
+
+        if(!$user){
+            return new JsonResponse(
+                new Message(Response::HTTP_NOT_FOUND, Response::$statusTexts[404]),
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $results = $this->getDoctrine()
+            ->getRepository(Results::class)
+            ->findAll();
+
+        if(!$results){
+            return new JsonResponse(
+                new Message(Response::HTTP_NOT_FOUND, Response::$statusTexts[404]),
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $counter = 0;
+        $totalResult = 0;
+        $average = 0;
+
+        /** @var Results $result */
+        foreach ($results as $result) {
+            $candidate = $result->getUser();
+
+            if ( $candidate->getId() == $userId ){
+                $totalResult = $totalResult + $result->getResult();
+                $counter++;
+            }
+        }
+
+        if($counter !== 0) {
+            $average = $totalResult / $counter;
+        }
+
+        return new JsonResponse(
+            [
+                'average' => $average,
+                'num_results' => $counter
+            ],
+            Response::HTTP_OK
+        );
     }
 }
