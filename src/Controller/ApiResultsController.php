@@ -22,7 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  *
  * @package App\Controller
  *
- * @Route("/api/v1/results");
+ * @Route("/api/v1");
  */
 
 class ApiResultsController extends AbstractController
@@ -32,7 +32,7 @@ class ApiResultsController extends AbstractController
      * Returns all results
      *
      * @return JsonResponse
-     * @Route("", name="cget_results", methods={ "GET" })
+     * @Route("/results", name="cget_results", methods={ "GET" })
      */
     public function cgetResults(): JsonResponse
     {
@@ -56,7 +56,7 @@ class ApiResultsController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      * @throws \Exception
-     * @Route("", name="post_results", methods={ "POST" })
+     * @Route("/results", name="post_results", methods={ "POST" })
      */
     public function postResults(Request $request): JsonResponse
     {
@@ -100,7 +100,7 @@ class ApiResultsController extends AbstractController
      * Provides the list of HTTP supported methods
      *
      * @return JsonResponse
-     * @Route("", name="options_results", methods={ "OPTIONS" })
+     * @Route("/results", name="options_results", methods={ "OPTIONS" })
      */
     public function optionsResults(): JsonResponse
     {
@@ -114,7 +114,7 @@ class ApiResultsController extends AbstractController
      *
      * @param int $resultId
      * @return JsonResponse
-     * @Route("/{resultId}", name="get_result", methods={ "GET" })
+     * @Route("/results/{resultId}", name="get_result", methods={ "GET" })
      */
     public function getResultById(int $resultId): JsonResponse
     {
@@ -136,7 +136,7 @@ class ApiResultsController extends AbstractController
      * @param Request $request
      * @param int $resultId
      * @return JsonResponse
-     * @Route("/{resultId}", name="put_result", methods={ "PUT" })
+     * @Route("/results/{resultId}", name="put_result", methods={ "PUT" })
      * @throws \Exception
      */
     public function putResult(int $resultId, Request $request): JsonResponse
@@ -191,7 +191,7 @@ class ApiResultsController extends AbstractController
      *
      * @param int $resultId
      * @return JsonResponse
-     * @Route("/{resultId}", name="delete_result", methods={ "DELETE" })
+     * @Route("/results/{resultId}", name="delete_result", methods={ "DELETE" })
      */
     public function deleteResult(int $resultId): JsonResponse
     {
@@ -221,7 +221,7 @@ class ApiResultsController extends AbstractController
      *
      * @param int $resultId
      * @return JsonResponse
-     * @Route("/{resultId}", name="options_result", methods={ "OPTIONS" })
+     * @Route("/results/{resultId}", name="options_result", methods={ "OPTIONS" })
      */
     public function optionResult(int $resultId): JsonResponse
     {
@@ -231,5 +231,46 @@ class ApiResultsController extends AbstractController
                 new Message(Response::HTTP_NOT_FOUND, Response::$statusTexts[404]),
                 Response::HTTP_NOT_FOUND
             );
+    }
+
+    /**
+     * Returns all results average
+     *
+     * @return JsonResponse
+     * @Route("/average/results", name="cget_results_average", methods={ "GET" })
+     */
+    public function cgetResultsAverage(): JsonResponse
+    {
+        $results = $this->getDoctrine()
+            ->getRepository(Results::class)
+            ->findAll();
+
+
+        if(!$results){
+            return new JsonResponse(
+                new Message(Response::HTTP_NOT_FOUND, Response::$statusTexts[404]),
+                Response::HTTP_NOT_FOUND
+            );
+        }
+
+        $counter = 0;
+        $totalResult = 0;
+
+        foreach ($results as $result) {
+            /** @var Results $result */
+            $totalResult = $totalResult + $result->getResult();
+            $counter++;
+        }
+
+        $average = $totalResult / $counter;
+
+        return new JsonResponse(
+            [
+                'average' => $average,
+                'num_results' => $counter
+            ],
+            Response::HTTP_OK
+        );
+
     }
 }
