@@ -649,14 +649,14 @@
         }
       }
     },
-    "/average/results": {
+    "/results/average": {
       "get": {
         "tags": [
-          "Average"
+          "Results"
         ],
         "summary": "Returns the average of all results",
         "description": "Returns the average of all results",
-        "operationId": "get_user_result_average",
+        "operationId": "cget_results_average",
         "responses": {
           "200": {
             "description": "Average",
@@ -689,10 +689,10 @@
         ]
       }
     },
-    "/average/results/{userId}": {
+    "/results/average/{userId}": {
       "get": {
         "tags": [
-          "Average"
+          "Results"
         ],
         "summary": "Returns the results average of an user",
         "description": "Returns the results average of an user identified by `resultId`",
@@ -744,10 +744,6 @@
     {
       "name": "Results",
       "description": "Result management"
-    },
-    {
-      "name": "Average",
-      "description": "Average management"
     }
   ],
   "servers": [

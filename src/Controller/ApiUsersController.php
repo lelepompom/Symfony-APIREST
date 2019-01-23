@@ -107,7 +107,7 @@ class ApiUsersController extends AbstractController
             ->find($userId);
 
         return $user
-            ? new JsonResponse(['user ' => $user])
+            ? new JsonResponse($user)
             : new JsonResponse(
                 new Message(Response::HTTP_NOT_FOUND, Response::$statusTexts[404]),
                 Response::HTTP_NOT_FOUND

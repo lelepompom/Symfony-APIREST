@@ -22,7 +22,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  *
  * @package App\Controller
  *
- * @Route("/api/v1");
+ * @Route("/api/v1/results");
  */
 
 class ApiResultsController extends AbstractController
@@ -32,7 +32,7 @@ class ApiResultsController extends AbstractController
      * Returns all results
      *
      * @return JsonResponse
-     * @Route("/results", name="cget_results", methods={ "GET" })
+     * @Route("", name="cget_results", methods={ "GET" })
      */
     public function cgetResults(): JsonResponse
     {
@@ -56,7 +56,7 @@ class ApiResultsController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      * @throws \Exception
-     * @Route("/results", name="post_results", methods={ "POST" })
+     * @Route("", name="post_results", methods={ "POST" })
      */
     public function postResults(Request $request): JsonResponse
     {
@@ -100,7 +100,7 @@ class ApiResultsController extends AbstractController
      * Provides the list of HTTP supported methods
      *
      * @return JsonResponse
-     * @Route("/results", name="options_results", methods={ "OPTIONS" })
+     * @Route("", name="options_results", methods={ "OPTIONS" })
      */
     public function optionsResults(): JsonResponse
     {
@@ -114,7 +114,7 @@ class ApiResultsController extends AbstractController
      *
      * @param int $resultId
      * @return JsonResponse
-     * @Route("/results/{resultId}", name="get_result", methods={ "GET" })
+     * @Route("/{resultId}", name="get_result", methods={ "GET" }, requirements={"resultId"="\d+"})
      */
     public function getResultById(int $resultId): JsonResponse
     {
@@ -123,7 +123,7 @@ class ApiResultsController extends AbstractController
             ->find($resultId);
 
         return $result
-            ? new JsonResponse(['result ' => $result])
+            ? new JsonResponse($result)
             : new JsonResponse(
                 new Message(Response::HTTP_NOT_FOUND, Response::$statusTexts[404]),
                 Response::HTTP_NOT_FOUND
@@ -136,7 +136,7 @@ class ApiResultsController extends AbstractController
      * @param Request $request
      * @param int $resultId
      * @return JsonResponse
-     * @Route("/results/{resultId}", name="put_result", methods={ "PUT" })
+     * @Route("/{resultId}", name="put_result", methods={ "PUT" })
      * @throws \Exception
      */
     public function putResult(int $resultId, Request $request): JsonResponse
@@ -191,7 +191,7 @@ class ApiResultsController extends AbstractController
      *
      * @param int $resultId
      * @return JsonResponse
-     * @Route("/results/{resultId}", name="delete_result", methods={ "DELETE" })
+     * @Route("/{resultId}", name="delete_result", methods={ "DELETE" })
      */
     public function deleteResult(int $resultId): JsonResponse
     {
@@ -221,7 +221,7 @@ class ApiResultsController extends AbstractController
      *
      * @param int $resultId
      * @return JsonResponse
-     * @Route("/results/{resultId}", name="options_result", methods={ "OPTIONS" })
+     * @Route("/{resultId}", name="options_result", methods={ "OPTIONS" })
      */
     public function optionResult(int $resultId): JsonResponse
     {
@@ -237,7 +237,7 @@ class ApiResultsController extends AbstractController
      * Returns all results average
      *
      * @return JsonResponse
-     * @Route("/average/results", name="cget_results_average", methods={ "GET" })
+     * @Route("/average", name="cget_results_average", methods={ "GET" })
      */
     public function cgetResultsAverage(): JsonResponse
     {
@@ -278,7 +278,7 @@ class ApiResultsController extends AbstractController
      *
      * @param int $userId
      * @return JsonResponse
-     * @Route("/average/results/{userId}", name="get_user_average", methods={ "GET" })
+     * @Route("/average/{userId}", name="get_user_average", methods={ "GET" })
      */
     public function getUserResultAverage(int $userId): JsonResponse
     {
