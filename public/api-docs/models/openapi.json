@@ -648,6 +648,46 @@
           }
         }
       }
+    },
+    "/average/results": {
+      "get": {
+        "tags": [
+          "Average"
+        ],
+        "summary": "Returns the average of all results",
+        "description": "Returns the average of all results",
+        "operationId": "get_user_result_average",
+        "responses": {
+          "200": {
+            "description": "Average",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Average"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Average"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Average"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      }
     }
   },
   "tags": [
@@ -659,6 +699,10 @@
     {
       "name": "Results",
       "description": "Result management"
+    },
+    {
+      "name": "Average",
+      "description": "Average management"
     }
   ],
   "servers": [
@@ -895,6 +939,28 @@
           "message": {
             "code": "HTTP code",
             "message": "Response Message"
+          }
+        }
+      },
+      "Average": {
+        "required": [
+          "average",
+          "num_results"
+        ],
+        "properties": {
+          "average": {
+            "description": "Response average",
+            "type": "float"
+          },
+          "num_results": {
+            "description": "Response num_results",
+            "type": "integer"
+          }
+        },
+        "example": {
+          "average": {
+            "average": 375.22,
+            "num_results": 7
           }
         }
       }
