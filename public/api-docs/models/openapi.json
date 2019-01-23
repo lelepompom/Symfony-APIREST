@@ -688,6 +688,51 @@
           }
         ]
       }
+    },
+    "/average/results/{userId}": {
+      "get": {
+        "tags": [
+          "Average"
+        ],
+        "summary": "Returns the results average of an user",
+        "description": "Returns the results average of an user identified by `resultId`",
+        "operationId": "get_user_average",
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/userId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Average",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Average"
+                }
+              },
+              "application/xml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Average"
+                }
+              },
+              "application/x-yaml": {
+                "schema": {
+                  "$ref": "#/components/schemas/Average"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/404_Resource_Not_Found_Response"
+          }
+        },
+        "security": [
+          {
+            "UPM_API_Security": []
+          }
+        ]
+      }
     }
   },
   "tags": [

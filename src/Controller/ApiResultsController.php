@@ -278,7 +278,7 @@ class ApiResultsController extends AbstractController
      *
      * @param int $userId
      * @return JsonResponse
-     * @Route("/average/{userId}", name="get_user_average", methods={ "GET" })
+     * @Route("/average/results/{userId}", name="get_user_average", methods={ "GET" })
      */
     public function getUserResultAverage(int $userId): JsonResponse
     {
